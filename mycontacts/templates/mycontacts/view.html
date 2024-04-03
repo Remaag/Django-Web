@@ -1,0 +1,49 @@
+{% extends 'mycontacts/background.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-add">
+    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 col-xs-offset-3">
+        <h1 class="text">Editar Contato</h1>
+
+        <form id="add-contact-form" enctype="multipart/form-data" class="form" role="form"
+            action="{% url 'update_contact' contact.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="form-group">
+                <label class="form-label">Foto</label>
+                <input type="file" class="form-control" id="img" name="foto" placeholder="+ Upload" tabindex="1">
+                <p class="text">Foto atual: {{ contact.foto.name }}</p>
+            </div>
+            <input type="hidden" name="meu_valor" id="meu-valor-input">
+            <button class="btn black" id="delete" name="delete">Excluir foto</button>
+            <div class="form-group">
+                <label class="form-label">Nome</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Nome" tabindex="1" required
+                    value="{{ contact.name }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Relação</label>
+                <input type="text" class="form-control" id="relation" name="relation" placeholder="Relação" tabindex="2"
+                    required value="{{ contact.relation }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Telefone" tabindex="3"
+                    required value="{{ contact.phone }}">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">E-mail</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="E-mail" tabindex="4"
+                    required value="{{ contact.email }}">
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn">Adicionar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'js/delete.js' %}"></script>
+
+{% endblock content %}

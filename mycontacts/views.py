@@ -1,10 +1,9 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import AddForm
 from .models import Contact
-from django.http import HttpResponseRedirect
 
 def show(request):
     """ 
@@ -13,6 +12,30 @@ def show(request):
     """
     contact_list = Contact.objects.all()
     return render(request, 'mycontacts/show.html',{'contacts': contact_list})
+
+def editar(request, id):
+    if request.method == 'POST':
+        contact_list = get_object_or_404(Contact, id = id)
+        django_form = AddForm(request.POST, instance = contact_list)
+
+        if django_form.is_valid():
+            django_form.save()
+            contact_list.save()
+            return redirect(show)
+    
+    else:
+        contact_list = Contact.objects.get(id = id)
+        return render(request, 'mycontacts/editar.html', {'contact': contact_list})
+
+def delete(request, id):
+    contact_list = get_object_or_404(Contact, id = id)
+
+    if request.method == 'POST':
+        contact_list.delete()
+        return redirect(show)
+    
+    else:
+        return render(request, 'mycontacts/delete.html', {'contact': contact_list})
     
 def add(request):
     """ This function is called to add one contact member to your contact list in your Database """
@@ -36,7 +59,7 @@ def add(request):
                 )
                  
             contact_list = Contact.objects.all()
-            return render(request, 'mycontacts/show.html',{'contacts': contact_list})    
+            return redirect(show)
         
         else:
             """ redirect to the same page if django_form goes wrong """
